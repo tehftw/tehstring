@@ -1,0 +1,101 @@
+---	makefile wildcard
+
+4.4.3 The Function wildcard
+
+Wildcard expansion happens automatically in rules. But wildcard expansion does not normally take place when a variable is set, or inside the arguments of a function. If you want to do wildcard expansion in such places, you need to use the wildcard function, like this:
+
+$(wildcard pattern…)
+
+This string, used anywhere in a makefile, is replaced by a space-separated list of names of existing files that match one of the given file name patterns. If no existing file name matches a pattern, then that pattern is omitted from the output of the wildcard function. Note that this is different from how unmatched wildcards behave in rules, where they are used verbatim rather than ignored (see Wildcard Pitfall).
+
+One use of the wildcard function is to get a list of all the C source files in a directory, like this:
+
+$(wildcard *.c)
+
+We can change the list of C source files into a list of object files by replacing the ‘.c’ suffix with ‘.o’ in the result, like this:
+
+$(patsubst %.c,%.o,$(wildcard *.c))
+
+(Here we have used another function, patsubst. See Functions for String Substitution and Analysis.)
+
+Thus, a makefile to compile all C source files in the directory and then link them together could be written as follows:
+
+objects := $(patsubst %.c,%.o,$(wildcard *.c))
+
+foo : $(objects)
+        cc -o foo $(objects)
+
+(This takes advantage of the implicit rule for compiling C programs, so there is no need to write explicit rules for compiling the files. See The Two Flavors of Variables, for an explanation of ‘:=’, which is a variant of ‘=’.) 
+
+---	UTF8 codepoint
+
+Number of bytes	Bits for code point	First code point	Last code point	Byte 1  	Byte 2  	Byte 3  	Byte 4
+1              	7                  	U+0000          	U+007F         	0xxxxxxx	        	        	
+2              	11                 	U+0080          	U+07FF         	110xxxxx	10xxxxxx	        	
+3              	16                 	U+0800          	U+FFFF         	1110xxxx	10xxxxxx	10xxxxxx	
+4              	21                 	U+10000         	U+10FFFF       	11110xxx	10xxxxxx	10xxxxxx	10xxxxxx
+
+---	angry unicodepoint
+
+
+😠
+U+1F620
+\xF0\x9F\x98\xA0
+b_11110000_10011111_10011000_10100000
+ANGRY FACE
+
+
+🌒
+U+1F312
+\xF0\x9F\x8C\x92
+WAXING CRESCENT MOON SYMBOL
+
+
+"α" , // 03b1
+"A" , // 0391
+"β" , // 03b2
+"B" , // 0392
+"γ" , // 03b3
+"Γ" , // 0393
+"δ" , // 03b4
+"Δ" , // 0394
+"ϵ" , // 03b5
+"E" , // 0395
+"ζ" , // 03b6
+"Z" , // 0396
+"η" , // 03b7
+"H" , // 0397
+"θ" , // 03b8
+"Θ" , // 0398
+"ι" , // 03b9
+"I" , // 0399
+"κ" , // 03ba
+"K" , // 039a
+"λ" , // 03bb
+"Λ" , // 039b
+"μ" , // 03bc
+"M" , // 039c
+"ν" , // 03bd
+"N" , // 039d
+"ξ" , // 03be
+"Ξ" , // 039e
+"o" , // 03bf
+"O" , // 039f
+"π" , // 03c0
+"Π" , // 03a0
+"ρ" , // 03c1
+"P" , // 03a1
+"σ" , // 03c3
+"Σ" , // 03a3
+"τ" , // 03c4
+"T" , // 03a4
+"υ" , // 03c5
+"ϒ" , // 03a5
+"ϕ" , // 03c6
+"Φ" , // 03a6
+"χ" , // 03c7
+"X" , // 03a7
+"ψ" , // 03c8
+"Ψ" , // 03a8
+"ω" , // 03c9
+"Ω" , // 03a9
